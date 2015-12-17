@@ -99,10 +99,7 @@ function islandora_database_sql_to_db(AbstractObject $object, $force = FALSE) {
   $port = 33060;
   $username = echo substr(md5(rand()), 0, 7);
   $password = echo substr(md5(rand()), 0, 7);
-
-  $module_path = drupal_get_path('module', 'islandora_database');
-  $localIP = getHostByName(getHostName());
-  $adminer_path = "http://" . $localIP . ":80/" . $module_path . "/includes/adminer-4.2.1-mysql.php";
+  $adminer_path = "/adminer-4.2.1-mysql.php";
 
   $docker_get_container = 'docker ps | grep 33060 | sed -e "s/\s.*//g"';
   exec($docker_get_container, $container_id);

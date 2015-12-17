@@ -6,3 +6,4 @@ sudo service docker restart
 newgrp docker
 docker build -t tutum/lamp github.com/tutumcloud/lamp
 docker run -d -p 8008:80 -p 33060:3306 tutum/lamp
+docker cp includes/adminer-4.2.1-mysql.php $(docker ps | grep 33060 | sed -e "s/\s.*//g"):/adminer-4.2.1-mysql.php
