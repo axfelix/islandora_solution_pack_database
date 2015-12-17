@@ -1,0 +1,8 @@
+name = "Islandora Database"
+description = "An Islandora Repository module to handle database dumps"
+dependencies[] = islandora
+package = Islandora Solution Packs
+core = 7.x
+version = 7.x-dev
+configure = admin/islandora/solution_pack_config/database
+stylesheets[all][] = css/islandora_database.theme.css

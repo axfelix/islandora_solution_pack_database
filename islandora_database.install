@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * islandora_database.install
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * @see islandora_database_islandora_required_objects()
+ *
+ * TODO: add the docker run command to init.d/systemd for reboots?
+ */
+function islandora_database_install() {
+  module_load_include('inc', 'islandora', 'includes/solution_packs');
+  islandora_install_solution_pack('islandora_database');
+  $module_path = drupal_get_path('module','islandora_database');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function islandora_database_uninstall() {
+  module_load_include('inc', 'islandora', 'includes/solution_packs');
+  islandora_install_solution_pack('islandora_database', 'uninstall');
+}
