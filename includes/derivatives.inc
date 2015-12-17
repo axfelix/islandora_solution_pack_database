@@ -88,7 +88,7 @@ function islandora_database_generate_adminer_wrapper($username, $password, $data
  *
  * @see hook_islandora_derivative()
  */
-function islandora_database_sql_to_db(AbstractObject $object, $force = FALSE) {
+function islandora_database_create_all_derivatives(AbstractObject $object, $force = FALSE) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   if (!isset($object['OBJ'])) {
     return islandora_database_missing_obj_datastream($object->id);

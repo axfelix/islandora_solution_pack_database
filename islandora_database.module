@@ -166,7 +166,7 @@ function islandora_database_preprocess_islandora_database(array &$variables) {
  */
 function islandora_database_islandora_sp_database_islandora_object_ingested($object) {
   module_load_include('inc', 'islandora_database', 'includes/derivatives');
-  islandora_database_sql_to_db($object);
+  islandora_database_create_all_derivatives($object);
 }
 
 
