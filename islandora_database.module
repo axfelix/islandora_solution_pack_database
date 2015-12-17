@@ -105,10 +105,10 @@ function islandora_database_islandora_content_model_forms_form_associations() {
  */
 function islandora_database_islandora_sp_database_islandora_ingest_steps() {
   return array(
-    'islandora_database_file_upload' => array(
+    'islandora_database' => array(
       'weight' => 10,
       'type' => 'form',
-      'form_id' => 'islandora_database_database_upload_form',
+      'form_id' => 'islandora_database_upload_form',
       'module' => 'islandora_database',
       'file' => 'includes/database_upload.form.inc',
     ),
