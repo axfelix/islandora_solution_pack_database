@@ -104,7 +104,7 @@ function islandora_database_create_all_derivatives(AbstractObject $object, $forc
   $docker_get_container = 'docker ps | grep 33060 | sed -e "s/\s.*//g"';
   exec($docker_get_container, $container_id);
 
-  $docker_get_mysql = 'docker logs ' . implode($container_id . ' | grep -oP "mysql -uadmin -p\S+"';
+  $docker_get_mysql = 'docker logs ' . implode($container_id . ' | grep -oP "mysql -uadmin -p\S+"');
   exec($docker_get_mysql, $mysql_credentials);
 
   $docker_ip = "127.0.0.1";
@@ -112,12 +112,14 @@ function islandora_database_create_all_derivatives(AbstractObject $object, $forc
 
   $sql_connect_command = implode($mysql_credentials) . " -h127.0.0.1 -P" . $port . " --default-character-set=utf8";
 
+  $module_path =  realpath(".") . DIRECTORY_SEPARATOR . drupal_get_path('module', 'islandora_database');
   exec("bash " . $module_path . "/includes/import-database.sh " . $file_uri . " " . $sql_connect_command);
 
   $sql_import_command = $sql_connect_command . " < " . $file_uri;
   exec($sql_import_command);
 
-  preg_match('/(?<=CREATE DATABASE )\S+/', file_get_contents($file_uri), $database_scraped);
+  $filesystem_file_uri = drupal_realpath(islandora_database_get_derivative_source_as_unmanaged_file($object));
+  preg_match('/(?<=CREATE DATABASE )\S+/', file_get_contents($filesystem_file_uri), $database_scraped);
   $database = preg_replace('/[\'"`;]/', '', $database_scraped[0]);
 
   $adminer_wrapper = islandora_database_generate_adminer_wrapper($username, $password, $database, $pid, $docker_ip, $port, $adminer_path);
