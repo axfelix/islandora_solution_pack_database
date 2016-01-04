@@ -97,8 +97,8 @@ function islandora_database_create_all_derivatives(AbstractObject $object, $forc
   $source = $source = drupal_realpath($file_uri);
 
   $port = 33060;
-  $username = echo substr(md5(rand()), 0, 7);
-  $password = echo substr(md5(rand()), 0, 7);
+  $username = substr(md5(rand()), 0, 7);
+  $password = substr(md5(rand()), 0, 7);
   $adminer_path = "/adminer-4.2.1-mysql.php";
 
   $docker_get_container = 'docker ps | grep 33060 | sed -e "s/\s.*//g"';
