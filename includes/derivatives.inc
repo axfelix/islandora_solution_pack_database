@@ -104,7 +104,7 @@ function islandora_database_create_all_derivatives(AbstractObject $object, $forc
   $docker_get_container = 'docker ps | grep 33060 | sed -e "s/\s.*//g"';
   exec($docker_get_container, $container_id);
 
-  $docker_get_mysql = 'docker logs ' . implode("", $container_id . ' | grep -oP "mysql -uadmin -p\S+"');
+  $docker_get_mysql = 'docker logs ' . implode($container_id) . ' | grep -oP "mysql -uadmin -p\S+"';
   exec($docker_get_mysql, $mysql_credentials);
 
   $docker_ip = "127.0.0.1";
@@ -124,7 +124,7 @@ function islandora_database_create_all_derivatives(AbstractObject $object, $forc
   $adminer_wrapper = islandora_database_generate_adminer_wrapper($username, $password, $database, $pid, $docker_ip, $port, $adminer_path);
 
   # copy the new adminer wrapper to the container
-  $wrapper_to_container = "docker cp " . $adminer_wrapper . " " . $container_id . ":/var/www/html/adminer_" . $pid . ".php";
+  $wrapper_to_container = "docker cp " . $adminer_wrapper . " " . implode($container_id) . ":/var/www/html/adminer_" . $pid . ".php";
   exec($wrapper_to_container, $execout, $success);
 
   file_unmanaged_delete($file_uri);
@@ -134,9 +134,8 @@ function islandora_database_create_all_derivatives(AbstractObject $object, $forc
       'success' => TRUE,
       'messages' => array(
         array(
-          'message' => t('Created live database for @dsid (@pid).'),
+          'message' => t('Created live database for @pid.'),
           'message_sub' => array(
-            '@dsid' => $dsid,
             '@pid' => $object->id,
           ),
           'type' => 'dsm',
