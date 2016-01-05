@@ -105,6 +105,7 @@ function islandora_database_create_all_derivatives(AbstractObject $object, $forc
   exec($docker_get_container, $container_id);
 
   $docker_get_mysql = 'docker logs ' . implode($container_id) . ' | grep -oP "mysql -uadmin -p\S+"';
+  # this writes some supervisord stuff to stderr in my environment but it's harmless
   exec($docker_get_mysql, $mysql_credentials);
 
   $docker_ip = "127.0.0.1";
@@ -113,14 +114,11 @@ function islandora_database_create_all_derivatives(AbstractObject $object, $forc
   $sql_connect_command = implode($mysql_credentials) . " -h127.0.0.1 -P" . $port . " --default-character-set=utf8";
 
   $module_path = drupal_get_path('module', 'islandora_database');
-  $database_import_command = "bash " . $module_path . "/includes/import-database.sh " . $source . " " . $sql_connect_command;
-  exec($database_import_command);
+  $database_import_command = "bash " . $module_path . "/includes/import-database.sh " . $source . " " . $sql_connect_command . " " . $username . " " . $password;
+  exec($database_import_command, $database);
 
-  $sql_import_command = $sql_connect_command . " < " . $source;
-  exec($sql_import_command);
-
-  preg_match('/(?<=CREATE DATABASE )\S+/', file_get_contents($file_uri), $database_scraped);
-  $database = preg_replace('/[\'"`;]/', '', array_values($database_scraped)[0]);
+  #preg_match('/(?<=CREATE DATABASE )\S+/', file_get_contents($file_uri), $database_scraped);
+  #$database = preg_replace('/[\'"`;]/', '', array_values($database_scraped)[0]);
 
   $adminer_wrapper = islandora_database_generate_adminer_wrapper($username, $password, $database, $pid, $docker_ip, $port, $adminer_path);
 
