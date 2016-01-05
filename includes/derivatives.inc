@@ -119,7 +119,7 @@ function islandora_database_create_all_derivatives(AbstractObject $object, $forc
   exec($sql_import_command);
 
   preg_match('/(?<=CREATE DATABASE )\S+/', file_get_contents($file_uri), $database_scraped);
-  $database = preg_replace('/[\'"`;]/', '', $database_scraped[0]);
+  $database = preg_replace('/[\'"`;]/', '', array_values($database_scraped)[0]);
 
   $adminer_wrapper = islandora_database_generate_adminer_wrapper($username, $password, $database, $pid, $docker_ip, $port, $adminer_path);
 
