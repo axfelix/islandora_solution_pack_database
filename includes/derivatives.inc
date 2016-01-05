@@ -112,10 +112,11 @@ function islandora_database_create_all_derivatives(AbstractObject $object, $forc
 
   $sql_connect_command = implode($mysql_credentials) . " -h127.0.0.1 -P" . $port . " --default-character-set=utf8";
 
-  $module_path =  realpath(".") . DIRECTORY_SEPARATOR . drupal_get_path('module', 'islandora_database');
-  exec("bash " . $module_path . "/includes/import-database.sh " . $file_uri . " " . $sql_connect_command);
+  $module_path = drupal_get_path('module', 'islandora_database');
+  $database_import_command = "bash " . $module_path . "/includes/import-database.sh " . $source . " " . $sql_connect_command;
+  exec($database_import_command);
 
-  $sql_import_command = $sql_connect_command . " < " . $file_uri;
+  $sql_import_command = $sql_connect_command . " < " . $source;
   exec($sql_import_command);
 
   preg_match('/(?<=CREATE DATABASE )\S+/', file_get_contents($file_uri), $database_scraped);
