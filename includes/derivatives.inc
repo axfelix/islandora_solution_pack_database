@@ -101,9 +101,11 @@ function islandora_database_create_all_derivatives(AbstractObject $object, $forc
   $password = substr(md5(rand()), 0, 7);
   $adminer_path = "/adminer-4.2.1-mysql.php";
 
+  # get the docker container ID (needs permissions; see readme)
   $docker_get_container = 'docker ps | grep 33060 | sed -e "s/\s.*//g"';
   exec($docker_get_container, $container_id);
 
+  # get the mysql admin credentials from docker logs
   $docker_get_mysql = 'docker logs ' . implode($container_id) . ' | grep -oP "mysql -uadmin -p\S+"';
   # this writes some supervisord stuff to stderr in my environment but it's harmless
   exec($docker_get_mysql, $mysql_credentials);
@@ -111,12 +113,15 @@ function islandora_database_create_all_derivatives(AbstractObject $object, $forc
   $docker_ip = "127.0.0.1";
   $pid = $object->id;
 
+  # append host and port information to mysql credentials
   $sql_connect_command = implode($mysql_credentials) . " -h127.0.0.1 -P" . $port . " --default-character-set=utf8";
 
+  # shell script to handle DB sanitization and ingest
   $module_path = drupal_get_path('module', 'islandora_database');
   $database_import_command = "bash " . $module_path . "/includes/import-database.sh " . $source . " " . $sql_connect_command . " " . $username . " " . $password;
   exec($database_import_command, $database);
 
+  # generate adminer wrapper
   $adminer_wrapper = islandora_database_generate_adminer_wrapper($username, $password, implode($database), $pid, $docker_ip, $port, $adminer_path);
 
   # copy adminer itself to the container
