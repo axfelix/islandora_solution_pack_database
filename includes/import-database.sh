@@ -16,6 +16,6 @@ DBNAME="$(grep -oP '(?<=CREATE DATABASE )\S+(?=;)' $1)"
 $2 < $1
 echo "CREATE USER $3 IDENTIFIED BY $4" | $2
 echo "REVOKE ALL PRIVILEGES ON *.* FROM $3@'%'; FLUSH PRIVILEGES" | $2
-echo "GRANT SELECT ON $database TO $3@'%'; FLUSH PRIVILEGES" | $2
+echo "GRANT SELECT ON $DBNAME TO $3@'%'; FLUSH PRIVILEGES" | $2
 
 echo $DBNAME
