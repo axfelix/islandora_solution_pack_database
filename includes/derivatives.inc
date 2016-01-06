@@ -112,7 +112,7 @@ function islandora_database_create_all_derivatives(AbstractObject $object, $forc
 
   $docker_ip = "127.0.0.1";
   $pid = $object->id;
-  $clean_pid = preg_replace("/:/", "", implode($pid));
+  $clean_pid = preg_replace("/:/", "", $pid);
 
   # append host and port information to mysql credentials
   $sql_connect_command = implode($mysql_credentials) . " -h127.0.0.1 -P" . $port . " --default-character-set=utf8";
@@ -128,7 +128,7 @@ function islandora_database_create_all_derivatives(AbstractObject $object, $forc
   # copy the new adminer wrapper to the container
   # $wrapper_to_container = "docker cp " . implode($adminer_wrapper) . " " . implode($container_id) . ":/app/adminer_" . $clean_pid . ".php";
   # workaround for the above command on docker <1.8
-  $wrapper_to_container = "docker exec -i implode($container_id) sh -c 'cat > /app/adminer_" . $clean_pid . ".php' < " . $adminer_wrapper;
+  $wrapper_to_container = "docker exec -i " . implode($container_id) . " sh -c 'cat > /app/adminer_" . $clean_pid . ".php' < " . $adminer_wrapper;
 
   exec($wrapper_to_container, $execout, $success);
 
