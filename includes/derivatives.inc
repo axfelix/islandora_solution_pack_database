@@ -118,7 +118,7 @@ function islandora_database_create_all_derivatives(AbstractObject $object, $forc
 
   # shell script to handle DB sanitization and ingest
   $module_path = drupal_get_path('module', 'islandora_database');
-  $database_import_command = "bash " . $module_path . "/includes/import-database.sh " . $source . " " . $sql_connect_command . " " . $username . " " . $password;
+  $database_import_command = "bash " . $module_path . "/includes/import-database.sh " . $source . " \"" . $sql_connect_command . "\" " . $username . " " . $password;
   exec($database_import_command, $database);
 
   # generate adminer wrapper
