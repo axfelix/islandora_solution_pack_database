@@ -147,7 +147,8 @@ function islandora_database_preprocess_islandora_database(array &$variables) {
 
   $pid = $islandora_object->id;
   $localIP = getHostByName(getHostName());
-  $variables['wrapper_url'] = 'http://' . $localIP . ':8008/adminer_' . $pid . '.php';
+  $clean_pid = preg_replace("/:/", "", $pid);
+  $variables['wrapper_url'] = 'http://' . $localIP . ':8008/adminer_' . $clean_pid . '.php';
 
   // Thumbnail.
   if (isset($islandora_object['TN']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object['TN'])) {

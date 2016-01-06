@@ -46,8 +46,8 @@ function islandora_database_get_derivative_source_as_unmanaged_file(AbstractObje
  * @return filename
  *   The file path to the new adminer wrapper.
  */
-function islandora_database_generate_adminer_wrapper($username, $password, $database, $pid, $docker_ip, $port, $adminer_path) {
-  $filename = "temporary://adminer_" . $pid . ".php";
+function islandora_database_generate_adminer_wrapper($username, $password, $database, $clean_pid, $docker_ip, $port, $adminer_path) {
+  $filename = "temporary://adminer_" . $clean_pid . ".php";
   $docker_address = $docker_ip . ":" . $port;
   $adminer_wrapper = '<?php
   function adminer_object() {
@@ -112,6 +112,7 @@ function islandora_database_create_all_derivatives(AbstractObject $object, $forc
 
   $docker_ip = "127.0.0.1";
   $pid = $object->id;
+  $clean_pid = preg_replace("/:/", "", $test);
 
   # append host and port information to mysql credentials
   $sql_connect_command = implode($mysql_credentials) . " -h127.0.0.1 -P" . $port . " --default-character-set=utf8";
@@ -122,12 +123,12 @@ function islandora_database_create_all_derivatives(AbstractObject $object, $forc
   exec($database_import_command, $database);
 
   # generate adminer wrapper
-  $adminer_wrapper = islandora_database_generate_adminer_wrapper($username, $password, implode($database), $pid, $docker_ip, $port, $adminer_path);
+  $adminer_wrapper = islandora_database_generate_adminer_wrapper($username, $password, implode($database), $clean_pid, $docker_ip, $port, $adminer_path);
 
   # copy the new adminer wrapper to the container
-  # $wrapper_to_container = "docker cp " . $adminer_wrapper . " " . implode($container_id) . ":/var/www/html/adminer_" . $pid . ".php";
+  # $wrapper_to_container = "docker cp " . implode($adminer_wrapper) . " " . implode($container_id) . ":/app/adminer_" . $clean_pid . ".php";
   # workaround for the above command on docker <1.8
-  $wrapper_to_container = "docker exec -i implode($container_id) sh -c 'cat > /var/www/html/adminer_" . $pid . ".php' < " . $adminer_wrapper;
+  $wrapper_to_container = "docker exec -i implode($container_id) sh -c 'cat > /app/adminer_" . $clean_pid . ".php' < " . implode($adminer_wrapper);
 
   exec($wrapper_to_container, $execout, $success);
 
