@@ -125,7 +125,10 @@ function islandora_database_create_all_derivatives(AbstractObject $object, $forc
   $adminer_wrapper = islandora_database_generate_adminer_wrapper($username, $password, implode($database), $pid, $docker_ip, $port, $adminer_path);
 
   # copy the new adminer wrapper to the container
-  $wrapper_to_container = "docker cp " . $adminer_wrapper . " " . implode($container_id) . ":/var/www/html/adminer_" . $pid . ".php";
+  # $wrapper_to_container = "docker cp " . $adminer_wrapper . " " . implode($container_id) . ":/var/www/html/adminer_" . $pid . ".php";
+  # workaround for the above command on docker <1.8
+  $wrapper_to_container = "docker exec -i implode($container_id) sh -c 'cat > /var/www/html/adminer_" . $pid . ".php' < " . $adminer_wrapper;
+
   exec($wrapper_to_container, $execout, $success);
 
   file_unmanaged_delete($file_uri);
