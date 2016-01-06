@@ -52,8 +52,8 @@ function islandora_database_generate_adminer_wrapper($username, $password, $data
   $adminer_wrapper = '<?php
   function adminer_object() {
       include_once "./plugins/plugin.php";
-      foreach (glob("plugins/*.php") as ' . $filename . ') {
-          include_once "./' . $filename . '";
+      foreach (glob("plugins/*.php") as $filename) {
+          include_once "./$filename";
       }
       $plugins = array(
           new AdminerFrames,
