@@ -178,7 +178,7 @@ function islandora_database_islandora_sp_database_islandora_object_ingested($obj
 /**
  * Implements hook_islandora_object_purged().
  */
-function islandora_database_islandora_sp_database_islandora_object_purged($object) {
+function islandora_database_islandora_sp_database_islandora_object_purged($pid) {
   module_load_include('inc', 'islandora_database', 'includes/derivates');
   # this code is duplicated from derivates and I'll make it nicer later
   # get the docker container ID (needs permissions; see readme)
@@ -191,7 +191,7 @@ function islandora_database_islandora_sp_database_islandora_object_purged($objec
   exec($docker_get_mysql, $mysql_credentials);
   
   $docker_ip = "127.0.0.1";
-  $pid = $object->id;
+  # $pid = $object->id;
   $port = 33060;
   $clean_pid = preg_replace("/:/", "", $pid);
 
