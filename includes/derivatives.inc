@@ -51,8 +51,8 @@ function islandora_database_generate_adminer_wrapper($username, $password, $data
   $docker_address = $docker_ip . ":" . $port;
   $adminer_wrapper = '<?php
   function adminer_object() {
-      include_once "./plugins/plugin.php";
-      foreach (glob("plugins/*.php") as $filename) {
+      include_once "/plugins/plugin.php";
+      foreach (glob("/plugins/*.php") as $filename) {
           include_once "./$filename";
       }
       $plugins = array(
