@@ -178,7 +178,7 @@ function islandora_database_islandora_sp_database_islandora_object_ingested($obj
 /**
  * Implements hook_islandora_object_purged().
  */
-function islandora_database_islandora_sp_database_islandora_object_purged() {
+function islandora_database_islandora_sp_database_islandora_object_purged(array &$variables) {
   module_load_include('inc', 'islandora_database', 'includes/derivates');
   # this code is duplicated from derivates and I'll make it nicer later
   # get the docker container ID (needs permissions; see readme)
