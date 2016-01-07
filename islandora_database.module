@@ -146,10 +146,11 @@ function islandora_database_preprocess_islandora_database(array &$variables) {
   $variables['metadata'] = islandora_retrieve_metadata_markup($islandora_object);
 
   // Adminer frame.
+  // Passing the username in the URL shouldn't be necessary but Adminer is acting like it is.
   $pid = $islandora_object->id;
   $localIP = getHostByName(getHostName());
   $clean_pid = preg_replace("/:/", "", $pid);
-  $get_username = "docker exec -i $(docker ps | grep 33060 | sed -e 's/\s.*//g') cat /app/adminer_" . $clean_pid . ".php | grep -oP '(?<=\", \")\S+(?=\", \")";
+  $get_username = "docker exec -i $(docker ps | grep 33060 | sed -e 's/\s.*//g') cat /app/adminer_" . $clean_pid . ".php | grep -oP '(?<=\", \")\S+(?=\", \")'";
   exec($get_username, $username);
   $variables['wrapper_url'] = 'http://' . $localIP . ':8008/adminer_' . $clean_pid . '.php?username=' . implode($username);
 
@@ -174,4 +175,31 @@ function islandora_database_islandora_sp_database_islandora_object_ingested($obj
 }
 
 
-# TODO: need a deletion hook that gets rid of the DB when object with matching PID is removed. this shouldn't be super tough.
+/**
+ * Implements hook_islandora_object_purged().
+ */
+function islandora_database_islandora_sp_database_islandora_object_purged() {
+  module_load_include('inc', 'islandora_database', 'includes/derivates');
+  # this code is duplicated from derivates and I'll  make it nicer later
+  # get the docker container ID (needs permissions; see readme)
+  $docker_get_container = "docker ps | grep 33060 | sed -e 's/\s.*//g'";
+  exec($docker_get_container, $container_id);
+
+  # get the mysql admin credentials from docker logs
+  $docker_get_mysql = 'docker logs ' . implode($container_id) . ' | grep -oP "mysql -uadmin -p\S+"';
+  # this writes some supervisord stuff to stderr in my environment but it's harmless
+  exec($docker_get_mysql, $mysql_credentials);
+  
+  $docker_ip = "127.0.0.1";
+  $pid = $object->id;
+  $clean_pid = preg_replace("/:/", "", $pid);
+
+  # append host and port information to mysql credentials
+  $sql_connect_command = implode($mysql_credentials) . " -h127.0.0.1 -P" . $port . " --default-character-set=utf8";
+
+  $pid = $islandora_object->id;
+  $clean_pid = preg_replace("/:/", "", $pid);
+  $get_database = "docker exec -i $(docker ps | grep 33060 | sed -e 's/\s.*//g') cat /app/adminer_" . $clean_pid . ".php | grep -oP '(?<=return \")\S+(?=\";)'";
+  $database_drop_command = "bash -c 'DROP DATABASE $get_database | $sql_connect_command'";
+  exec($database_drop_command);
+}
