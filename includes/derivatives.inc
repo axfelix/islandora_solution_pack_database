@@ -47,7 +47,7 @@ function islandora_database_get_derivative_source_as_unmanaged_file(AbstractObje
  *   The file path to the new adminer wrapper.
  */
 function islandora_database_generate_adminer_wrapper($username, $password, $database, $clean_pid, $docker_ip, $port, $adminer_path) {
-  $filename = "temporary://adminer_" . $clean_pid . ".php";
+  $filename = "/tmp/adminer_" . $clean_pid . ".php";
   $docker_address = $docker_ip . ":" . $port;
   $adminer_wrapper = '<?php
   function adminer_object() {
