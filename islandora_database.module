@@ -190,18 +190,18 @@ function islandora_database_islandora_sp_database_islandora_object_purged() {
   # this writes some supervisord stuff to stderr in my environment but it's harmless
   exec($docker_get_mysql, $mysql_credentials);
   
+  $islandora_object = $variables['islandora_object'];
   $docker_ip = "127.0.0.1";
-  $pid = $object->id;
+  $pid = $islandora_object->id;
+  $port = 33060;
   $clean_pid = preg_replace("/:/", "", $pid);
 
   # append host and port information to mysql credentials
   $sql_connect_command = implode($mysql_credentials) . " -h127.0.0.1 -P" . $port . " --default-character-set=utf8";
 
-  $pid = $islandora_object->id;
-  $clean_pid = preg_replace("/:/", "", $pid);
   $get_database = "docker exec -i $(docker ps | grep 33060 | sed -e 's/\s.*//g') cat /app/adminer_" . $clean_pid . ".php | grep -oP '(?<=return \")(\S| )+(?=\";)'";
   exec($get_database, $database);
 
-  $database_drop_command = 'echo "DROP DATABASE ' . $database . '" | $sql_connect_command';
+  $database_drop_command = 'echo "DROP DATABASE ' . implode($database) . '" | $sql_connect_command';
   exec($database_drop_command);
 }
