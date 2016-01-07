@@ -51,8 +51,8 @@ function islandora_database_generate_adminer_wrapper($username, $password, $data
   $docker_address = $docker_ip . ":" . $port;
   $adminer_wrapper = '<?php
   function adminer_object() {
-      include_once "/plugins/plugin.php";
-      foreach (glob("/plugins/*.php") as $filename) {
+      include_once "plugins/plugin.php";
+      foreach (glob("plugins/*.php") as $filename) {
           include_once "./$filename";
       }
       $plugins = array(
@@ -99,7 +99,7 @@ function islandora_database_create_all_derivatives(AbstractObject $object, $forc
   $port = 33060;
   $username = substr(md5(rand()), 0, 7);
   $password = substr(md5(rand()), 0, 7);
-  $adminer_path = "/adminer-4.2.1-mysql.php";
+  $adminer_path = "adminer.php";
 
   # get the docker container ID (needs permissions; see readme)
   $docker_get_container = "docker ps | grep 33060 | sed -e 's/\s.*//g'";
