@@ -38,6 +38,8 @@ Known Issues
 
 -   Non-public objects are not really supported since the Adminer instances running in the docker container don't know anything about the Fedora auth restrictions.
 
+-	This *WILL NOT WORK* until I get an answer to https://sourceforge.net/p/adminer/discussion/960418/thread/a0e14f27/ so I don't need to pass credentials in the URL (as in L149 of the main islandora_database.module). This is the only thing keeping it from working currently.
+
 Maintainers/Sponsors
 --------------------
 
