@@ -177,6 +177,7 @@ function islandora_database_islandora_sp_database_islandora_object_ingested($obj
 
 /**
  * Implements hook_islandora_object_purged().
+ * There's way too much c/p'ed code in here.
  */
 function islandora_database_islandora_sp_database_islandora_object_purged($pid) {
   module_load_include('inc', 'islandora_database', 'includes/derivates');
@@ -193,10 +194,8 @@ function islandora_database_islandora_sp_database_islandora_object_purged($pid) 
   $sql_connect_command = implode($mysql_credentials) . " -h127.0.0.1 -P" . $port . " --default-character-set=utf8";
 
   $get_database = "docker exec -i $(docker ps | grep 33060 | sed -e 's/\s.*//g') cat /app/adminer_" . $clean_pid . ".php | grep -oP '(?<=return \")(\S| )+(?=\";)'";
-  dd($get_database, "Get database");
   exec($get_database, $database);
 
-  $database_drop_command = 'echo "DROP DATABASE ' . implode($database) . '" | $sql_connect_command';
-  dd($database_drop_command, "Database drop command");
+  $database_drop_command = 'echo "DROP DATABASE ' . implode($database) . '" | ' . $sql_connect_command;
   exec($database_drop_command);
 }
