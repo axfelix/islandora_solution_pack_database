@@ -180,27 +180,23 @@ function islandora_database_islandora_sp_database_islandora_object_ingested($obj
  */
 function islandora_database_islandora_sp_database_islandora_object_purged($pid) {
   module_load_include('inc', 'islandora_database', 'includes/derivates');
-  # this code is duplicated from derivates and I'll make it nicer later
-  # get the docker container ID (needs permissions; see readme)
   $docker_get_container = "docker ps | grep 33060 | sed -e 's/\s.*//g'";
   exec($docker_get_container, $container_id);
 
-  # get the mysql admin credentials from docker logs
   $docker_get_mysql = 'docker logs ' . implode($container_id) . ' | grep -oP "mysql -uadmin -p\S+"';
-  # this writes some supervisord stuff to stderr in my environment but it's harmless
   exec($docker_get_mysql, $mysql_credentials);
   
   $docker_ip = "127.0.0.1";
-  # $pid = $object->id;
   $port = 33060;
   $clean_pid = preg_replace("/:/", "", $pid);
 
-  # append host and port information to mysql credentials
   $sql_connect_command = implode($mysql_credentials) . " -h127.0.0.1 -P" . $port . " --default-character-set=utf8";
 
   $get_database = "docker exec -i $(docker ps | grep 33060 | sed -e 's/\s.*//g') cat /app/adminer_" . $clean_pid . ".php | grep -oP '(?<=return \")(\S| )+(?=\";)'";
+  dd($get_database, "Get database");
   exec($get_database, $database);
 
   $database_drop_command = 'echo "DROP DATABASE ' . implode($database) . '" | $sql_connect_command';
+  dd($database_drop_command, "Database drop command");
   exec($database_drop_command);
 }
