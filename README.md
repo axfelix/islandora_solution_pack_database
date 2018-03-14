@@ -34,11 +34,10 @@ Known Issues
 
 -   Database names can conflict, though this is fairly rare due to the way most DB tools handle import/export.
 
--	This module does a probably-appalling amount of shelling out to grep and sed and whatnot. Significant parts would have to be rewritten for it to be "cleaner" / more pure PHP / theoretically work on Windows. I will never do this.
+-   This module does a probably-appalling amount of shelling out to grep and sed and whatnot. Significant parts would have to be rewritten for it to be "cleaner" / more pure PHP / theoretically work on Windows. I will never do this.
 
 -   Non-public objects are not really supported since the Adminer instances running in the docker container don't know anything about the Fedora auth restrictions.
 
--	This *WILL NOT WORK* until I get an answer to https://sourceforge.net/p/adminer/discussion/960418/thread/a0e14f27/ so I don't need to pass credentials in the URL (as in L149 of the main islandora_database.module). This is the only thing keeping it from working currently.
 
 Maintainers/Sponsors
 --------------------

@@ -50,7 +50,7 @@ function islandora_database_islandora_required_objects(IslandoraTuque $connectio
   $datastream = $database_collection->constructDatastream('TN', 'M');
   $datastream->label = 'Thumbnail';
   $datastream->mimetype = 'image/png';
-  $datastream->setContentFromFile("$module_path/images/folder.png", FALSE);
+  $datastream->setContentFromFile("$module_path/images/database.png", FALSE);
   $database_collection->ingestDatastream($datastream);
   return array(
     'islandora_database' => array(
@@ -146,7 +146,6 @@ function islandora_database_preprocess_islandora_database(array &$variables) {
   $variables['metadata'] = islandora_retrieve_metadata_markup($islandora_object);
 
   // Adminer frame.
-  // Passing the username in the URL shouldn't be necessary but Adminer is acting like it is. Testing for now.
   $pid = $islandora_object->id;
   $localIP = getHostByName(getHostName());
   $clean_pid = preg_replace("/:/", "", $pid);
