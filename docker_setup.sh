@@ -4,7 +4,7 @@ sudo groupadd docker
 sudo gpasswd -a $USER docker
 sudo service docker restart
 newgrp docker
-docker build -t tutum/lamp github.com/tutumcloud/lamp
+docker build -t tutum/lamp github.com/tutumcloud/lamp.git#master
 docker run -d -p 8008:80 -p 33060:3306 tutum/lamp
 docker exec -i $(docker ps | grep 33060 | sed -e "s/\s.*//g") mkdir /plugins
 docker cp includes/adminer-4.2.1-mysql.php $(docker ps | grep 33060 | sed -e "s/\s.*//g"):/app/adminer.php
