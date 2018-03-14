@@ -15,7 +15,7 @@ This module requires the following modules/libraries:
 
 -   [Tuque](<https://github.com/islandora/tuque>)
 
--   [docker](<https://www.docker.com/>) - Needs 1.8+ for `docker cp`, check for upstream sources.
+-   [docker](<https://www.docker.com/>)
 
 -   [git](<http://git-scm.com/>) - Debian/Ubuntu `sudo apt-get install git`
 
