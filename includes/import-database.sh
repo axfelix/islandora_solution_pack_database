@@ -12,6 +12,10 @@ if grep -q "CREATE DATABASE" $1; then :; else sed -i "s/-- MySQL dump/CREATE DAT
 
 # Get the DB name now that there's definitely one in there
 DBNAME="$(grep -oP '(?<=CREATE DATABASE )\S+(?=;)' $1)"
+if [ -z "$DBNAME" ]
+then
+DBNAME="$(grep -oP '(?<=CREATE DATABASE IF NOT EXISTS )\S+(?=;)' $1)"
+fi
 
 $2 < $1
 echo "CREATE USER '$3' IDENTIFIED BY '$4'" | $2
