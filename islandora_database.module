@@ -151,7 +151,7 @@ function islandora_database_preprocess_islandora_database(array &$variables) {
   $clean_pid = preg_replace("/:/", "", $pid);
   $get_username = "docker exec -i $(docker ps | grep 33060 | sed -e 's/\s.*//g') cat /app/adminer_" . $clean_pid . ".php | grep -oP '(?<=\", \")\S+(?=\", \")'";
   exec($get_username, $username);
-  $variables['wrapper_url'] = 'https://' . $localIP . ':8008/adminer_' . $clean_pid . '.php?username=' . implode($username);
+  $variables['wrapper_url'] = 'http://' . $localIP . ':8008/adminer_' . $clean_pid . '.php?username=' . implode($username);
 
   // Thumbnail.
   if (isset($islandora_object['TN']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object['TN'])) {
